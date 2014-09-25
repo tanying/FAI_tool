@@ -1,0 +1,161 @@
+#!/usr/bin/python
+# -*- coding: utf8 -*-
+#Golden information compare
+
+__author__ = 'Tan Ying<ying.tan@tcl.com>' 
+
+import os
+import sys
+import getopt
+import commands
+from xml.etree import ElementTree
+from utils import *
+
+logger = log.getLogging('PortingChecker')
+
+def pull_info_from_phone(is_golden):
+    global PULL_SUCCESS_FLAG
+
+    if is_golden:
+        property_file = GOLDEN_PROPERTY
+        unconnected_hint = 'Please connect the Golden Phone with PC by USB.'
+        success_hint = 'Pull system property from golden phone successful.\n'
+    else:
+        property_file = SAMPLE_PROPERTY
+        unconnected_hint = 'Please connect the Sample Phone with PC by USB for comparation.'
+        success_hint = 'Pull system property from compare phone successful.\n'
+    command = 'adb shell getprop > %s' % property_file
+    status, output = commands.getstatusoutput(command)
+
+    if status == 0:
+        print success_hint
+        PULL_SUCCESS_FLAG = True
+    else:
+        print unconnected_hint
+        usb_connected = raw_input('enter(aleady), else(exit)')
+
+        if usb_connected == '':
+            pull_info_from_phone(is_golden)
+
+def filter_brackets(string):
+    return string[1:-1]
+
+def change_file_to_dict(filepath):
+    fdict = {}
+    f = open(filepath, 'r')
+    while True:
+        line = f.readline()
+        if not line:
+            break
+        else:
+            line_list = line.split(':')
+            key = filter_brackets(line_list[0].strip())
+            value = filter_brackets(line_list[1].strip())
+            fdict[key] = value
+    return fdict
+
+def run_comparation(golden_filepath, sample_filepath):
+    golden_dict = change_file_to_dict(golden_filepath)
+    compare_dict = change_file_to_dict(sample_filepath)
+
+    in_golden_set = set(golden_dict.items())-set(compare_dict.items())
+    in_sample_set = set(compare_dict.items())-set(golden_dict.items())
+
+    in_golden_dict = change_binaryTupleSet_to_dict(in_golden_set)
+    in_sample_dict = change_binaryTupleSet_to_dict(in_sample_set)
+
+    return generate_diff_dict(in_golden_dict, in_sample_dict)
+
+def generate_diff_dict(gdt, sdt):
+    diff_dict = {}
+    diff_value = []
+    not_in_golden = []
+    not_in_sample = []
+
+    for gkey in gdt:
+        if not sdt.has_key(gkey):
+            dt = {}
+            #dt['info'] = 'Info exists in Golden but not in Sample.'
+            dt['key'] = gkey
+            dt['value'] = gdt[gkey]
+            not_in_sample.append(dt)
+        else:
+            dt = {}
+            #dt['info'] = 'different value.'
+            dt['key'] = gkey
+            dt['golden_value'] = gdt[gkey]
+            dt['sample_value'] = sdt[gkey]
+            diff_value.append(dt)
+
+    for skey in sdt:
+        if not gdt.has_key(skey):
+            dt = {}
+            #dt['info'] = 'Info exists in Sample but not in Golden.'
+            dt['key'] = skey
+            dt['value'] = sdt[skey]
+            not_in_golden.append(dt)
+
+    diff_dict['diff_value'] = diff_value
+    diff_dict['not_in_golden'] = not_in_golden
+    diff_dict['not_in_sample'] = not_in_sample
+
+    return diff_dict
+
+def change_binaryTupleSet_to_dict(btset):
+    dt = {}
+    for item in btset:
+        key = item[0]
+        value = item[1]
+        dt[key] = value
+
+    return dt
+
+def output_diff_to_file(diff, file):
+    result_string = 'FAI result: '
+    if diff:
+        result_string += 'FAIL\n\n'
+
+        list0 = diff['diff_value']
+        result_string += 'Golden Phone and Sample Phone have different value.\n'
+        for info in list0:
+            result_string += '  key: %s\n' % info['key']
+            result_string += '    golden_value: %s\n' % info['golden_value']
+            result_string += '    sample_value: %s\n' % info['sample_value']
+
+        list1 = diff['not_in_sample']
+        result_string += '\nInfo exists in Golden but not in Sample.\n'
+        for info in list1:
+            result_string += '  [%s]: [%s]\n' % (info['key'], info['value'])
+
+        list2 = diff['not_in_golden']
+        result_string += '\nInfo exists in Sample but not in Golden.\n'
+        for info in list2:
+            result_string += '  [%s]: [%s]\n' % (info['key'], info['value'])
+            # result_string += '  key: %s\n' % info['key']
+            # result_string += '  value: %s\n' % info['value']
+    else:
+        result_string += 'PASS'
+
+    f = open(file, 'wb')
+    result = str(result_string)
+    f.write(result)
+    f.close()
+
+    print 'The compare result have output successfully in [%s]' % file
+
+def main():
+    global PULL_SUCCESS_FLAG
+    pull_info_from_phone(True)
+
+    if PULL_SUCCESS_FLAG:
+        PULL_SUCCESS_FLAG = False
+        print('Please connect the Sample Phone with PC by USB for comparation:')
+        usb_connected = raw_input('enter(aleady), else(exit)')
+        pull_info_from_phone(False)
+
+        if PULL_SUCCESS_FLAG:
+            diff_dict = run_comparation(GOLDEN_PROPERTY, SAMPLE_PROPERTY)
+            output_diff_to_file(diff_dict, PROPERTY_COMPARE_RESULT)
+
+if __name__ == '__main__':
+    main()
