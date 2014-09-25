@@ -24,6 +24,7 @@ def pull_info_from_phone(is_golden):
         property_file = SAMPLE_PROPERTY
         unconnected_hint = 'Please connect the Sample Phone with PC by USB for comparation.'
         success_hint = 'Pull system property from compare phone successful.\n'
+
     command = 'adb shell getprop > %s' % property_file
     status, output = commands.getstatusoutput(command)
 

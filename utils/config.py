@@ -9,6 +9,8 @@ LOG_LEVEL = logging.DEBUG
 LOG_LEVEL_FILE = logging.DEBUG
 LOG_FILE = 'bin/goldenInfoCmp.log'
 
+PULL_INFO_SHELL = 'utils/pull_info.sh'
+
 GOLDEN_PROPERTY = 'bin/property_golden.txt'
 SAMPLE_PROPERTY = 'bin/property.txt'
 
