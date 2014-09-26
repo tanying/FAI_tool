@@ -7,10 +7,13 @@ import os
 import logging
 import config
 
-if not os.path.exists(config.OUTPUT_DIR):
-    os.mkdir(config.OUTPUT_DIR)
+if not os.path.exists(config.BIN_DIR):
+    os.mkdir(config.BIN_DIR)
 elif not os.path.isfile(config.LOG_FILE):
     os.mknod(config.LOG_FILE)
+
+if not os.path.exists(config.OUTPUT_DIR):
+    os.mkdir(config.OUTPUT_DIR)
 
 logging.basicConfig(level = config.LOG_LEVEL_FILE,
                     format ='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
