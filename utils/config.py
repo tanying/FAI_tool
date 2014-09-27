@@ -18,6 +18,12 @@ SAMPLE_PROPERTY = 'bin/property_sample.txt'
 GOLDEN_COLLECTION = 'bin/collection_golden.txt'
 SAMPLE_COLLECTION = 'bin/collection_sample.txt'
 
+SETTINGS_KEY_TAG = '<golden.settings.title>'
+SETTINGS_VAL_TAG = '<golden.settings.content>'
+
+RINGTONE_KEY_TAG = '<golden.ringtone.title>'
+RINGTONE_VAL_TAG = '<golden.ringtone.content>'
+
 PULL_SUCCESS_FLAG = False
 
 PROPERTY_COMPARE_RESULT = 'out/compare_result.txt'
