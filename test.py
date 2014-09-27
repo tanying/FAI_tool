@@ -1,14 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-from xml.etree import ElementTree
+#!/usr/bin/python
+# -*- coding: utf8 -*-
 
 file = 'bin/collection_golden.txt'
 
 f = open(file, 'r')
-text = f.read()
+flist = f.readlines()
 f.close()
 
-root = ElementTree.fromstring(text)
-varNodes = root.getiterator('VAR')
-for node in varNodes:
+for item in flist:
+    print item
+    print flist.index(item)
