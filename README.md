@@ -7,13 +7,10 @@ FAI Compare
 
 system property
 settings
-contacts
 ringtones
-notifications
-alarms
 
 启动比较
-python ginfocmp
+python fai
 
 输出文件
 out/compare_result.txt
