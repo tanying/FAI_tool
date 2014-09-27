@@ -1,8 +1,6 @@
 <golden.settings.title>volume_music</golden.settings.title>
-<golden.settings.content>11</golden.settings.content>
+<golden.settings.content>12</golden.settings.content>
 <golden.settings.title>volume_ring</golden.settings.title>
-<golden.settings.content>11</golden.settings.content>
-<golden.settings.title>volume_system</golden.settings.title>
 <golden.settings.content>15</golden.settings.content>
 <golden.settings.title>volume_voice</golden.settings.title>
 <golden.settings.content>4</golden.settings.content>
@@ -10,6 +8,8 @@
 <golden.settings.content>11</golden.settings.content>
 <golden.settings.title>volume_notification</golden.settings.title>
 <golden.settings.content>11</golden.settings.content>
+<golden.settings.title>volume_notification111</golden.settings.title>
+<golden.settings.content>15</golden.settings.content>
 <golden.settings.title>volume_bluetooth_sco</golden.settings.title>
 <golden.settings.content>7</golden.settings.content>
 <golden.settings.title>mute_streams_affected</golden.settings.title>
@@ -318,9 +318,7 @@
 <golden.ringtone.content>/storage/sdcard0/Recording/record20131228153040.3gpp</golden.ringtone.content>
 <golden.ringtone.title>record20131228153527</golden.ringtone.title>
 <golden.ringtone.content>/storage/sdcard0/Recording/record20131228153527.3gpp</golden.ringtone.content>
-<golden.ringtone.title>record20131228162306</golden.ringtone.title>
-<golden.ringtone.content>/storage/sdcard0/Recording/record20131228162306.3gpp</golden.ringtone.content>
-<golden.ringtone.title>record20131228162418</golden.ringtone.title>
+<golden.ringtone.title>record20131228162418qweqwe</golden.ringtone.title>
 <golden.ringtone.content>/storage/sdcard0/Recording/record20131228162418.3gpp</golden.ringtone.content>
 <golden.ringtone.title>record20131228164932</golden.ringtone.title>
 <golden.ringtone.content>/storage/sdcard0/Recording/record20131228164932.3gpp</golden.ringtone.content>
@@ -333,6 +331,8 @@
 <golden.ringtone.title>record20131228184712</golden.ringtone.title>
 <golden.ringtone.content>/storage/sdcard0/Recording/record20131228184712.3gpp</golden.ringtone.content>
 <golden.ringtone.title>record20131228184930</golden.ringtone.title>
+<golden.ringtone.content>/storage/sdcard0/Recording/record20131228184930.3gpp</golden.ringtone.content>
+<golden.ringtone.title>record20131qweqwe228184930</golden.ringtone.title>
 <golden.ringtone.content>/storage/sdcard0/Recording/record20131228184930.3gpp</golden.ringtone.content>
 <golden.ringtone.title>record20131228185008</golden.ringtone.title>
 <golden.ringtone.content>/storage/sdcard0/Recording/record20131228185008.3gpp</golden.ringtone.content>
@@ -361,8 +361,8 @@
 <golden.ringtone.title>record20140101091731</golden.ringtone.title>
 <golden.ringtone.content>/storage/sdcard0/Recording/record20140101091731.3gpp</golden.ringtone.content>
 <golden.ringtone.title>record20140101143945</golden.ringtone.title>
-<golden.ringtone.content>/storage/sdcard0/Recording/record20140101143945.3gpp</golden.ringtone.content>
-<golden.ringtone.title>record20140101155951</golden.ringtone.title>
+<golden.ringtone.content>/storage/sasdasddcard0/Recording/record20140101143945.3gpp</golden.ringtone.content>
+<golden.ringtone.title>record201401011asdasd55951</golden.ringtone.title>
 <golden.ringtone.content>/storage/sdcard0/Recording/record20140101155951.3gpp</golden.ringtone.content>
 <golden.ringtone.title>record20140101161039</golden.ringtone.title>
 <golden.ringtone.content>/storage/sdcard0/Recording/record20140101161039.3gpp</golden.ringtone.content>
