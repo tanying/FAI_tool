@@ -50,8 +50,6 @@ def pull_info_from_phone(is_golden, path):
     else:
         print unconnected_hint
         #restart server
-        os.system('sudo adb kill-server')
-        os.system('sudo adb start-server')
 
         usb_connected = raw_input('enter(aleady), else(exit)')
 

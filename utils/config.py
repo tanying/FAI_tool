@@ -10,8 +10,6 @@ LOG_LEVEL = logging.DEBUG
 LOG_LEVEL_FILE = logging.DEBUG
 LOG_FILE = 'bin/fai.log'
 
-PULL_INFO_SHELL = 'utils/pull_info.sh'
-
 GOLDEN_PROPERTY = 'property_golden.txt'
 SAMPLE_PROPERTY = 'property_sample.txt'
 
