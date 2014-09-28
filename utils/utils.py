@@ -156,6 +156,9 @@ def output_diff_to_file(diff, file):
             result_string += '\n\n[ringtone difference]\n'
             result_string = generate_out_put_string(diff['ringtone'], result_string)
 
+    if not os.path.exists(config.OUTPUT_DIR):
+        os.mkdir(config.OUTPUT_DIR)
+
     f = open(file, 'wb')
     result = str(result_string)
     f.write(result)

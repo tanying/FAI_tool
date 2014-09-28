@@ -6,6 +6,7 @@ __author__ = 'Tan Ying<ying.tan@tcl.com>'
 
 import os
 import sys
+import shutil
 import getopt
 import commands
 from xml.etree import ElementTree
@@ -16,7 +17,7 @@ logger = log.getLogging('fai')
 def pull_by_apk(cfile):
 
     if is_pull_aready('golden_collection.flag'):
-        os.system('adb pull /sdcard/golden_collection.txt ./%s' % cfile)
+        os.system('adb pull /sdcard/golden_collection.txt %s' % cfile)
         os.system('adb uninstall com.tcl.goldencollector')
         os.system('adb shell rm -f /data/local/tmp/goldencollector.apk')
         os.system('adb shell rm -f /sdcard/golden_collection.flag')
@@ -24,17 +25,15 @@ def pull_by_apk(cfile):
     else:
         pull_by_apk(cfile)
 
-def pull_info_from_phone(is_golden):
-    global PULL_SUCCESS_FLAG
-
+def pull_info_from_phone(is_golden, path):
     if is_golden:
-        property_file = GOLDEN_PROPERTY
-        collection_file = GOLDEN_COLLECTION
+        property_file = path + GOLDEN_PROPERTY
+        collection_file = path + GOLDEN_COLLECTION
         unconnected_hint = 'Please connect the Golden Phone with PC by USB.'
         success_hint = 'Pull properties from golden phone successful.\n'
     else:
-        property_file = SAMPLE_PROPERTY
-        collection_file = SAMPLE_COLLECTION
+        property_file = path + SAMPLE_PROPERTY
+        collection_file = path + SAMPLE_COLLECTION
         unconnected_hint = 'Please connect the Sample Phone with PC by USB for comparation.'
         success_hint = 'Pull properties from sample phone successful.\n'
 
@@ -47,7 +46,6 @@ def pull_info_from_phone(is_golden):
 
         pull_by_apk(collection_file)
 
-        PULL_SUCCESS_FLAG = True
         print success_hint
     else:
         print unconnected_hint
@@ -58,7 +56,7 @@ def pull_info_from_phone(is_golden):
         usb_connected = raw_input('enter(aleady), else(exit)')
 
         if usb_connected == '':
-            pull_info_from_phone(is_golden)
+            pull_info_from_phone(is_golden, path)
         else:
             print 'You pressed any key to exit, bye!'
             sys.exit(1)
@@ -96,29 +94,48 @@ def parse_collection_txt(file):
     fdict['ringtone'] = rdict
     return fdict
 
+def get_filepath(argv_list):
+    cmd = argv_list[1]
+
+    if len(argv_list) == 2:
+        path = path
+    elif len(argv_list) >= 3:
+        path = argv_list[2]
+
+        if path[-1] != '/':
+            path += '/'
+
+        if cmd == '-p':
+            if not os.path.exists(path):
+                raise FAIError('Invalid path!')
+        elif cmd == '-c':
+            if (not os.path.isfile(path + GOLDEN_PROPERTY)) or (not os.path.isfile(path + GOLDEN_COLLECTION)):
+                raise FAIError('File not in the corresponding path!')
+
+    return path
+
 def main():
+    argv_len = len(sys.argv)
+    if argv_len < 2:
+        print 'Please add parameters:\n  -p [golden path] pull golden info\n  -c [golden path] compare infomation\n'
+    elif argv_len >= 2:
+        cmd = sys.argv[1]
+        path = get_filepath(sys.argv)
+        #pull golden info 
+        if cmd == '-p': 
+            pull_info_from_phone(True, path)
 
-    global PULL_SUCCESS_FLAG
-    pull_info_from_phone(True)
+        elif cmd == '-c':
+            pull_info_from_phone(False, path)
 
-    if PULL_SUCCESS_FLAG:
-        PULL_SUCCESS_FLAG = False
-        print('Please connect the Sample Phone with PC by USB for comparation:')
-        usb_connected = raw_input('enter(aleady), else(exit)')
-        if usb_connected == '':
-            pull_info_from_phone(False)
-        else:
-            sys.exit(1)
-
-        if PULL_SUCCESS_FLAG:
             diff_dict = {}
             #system property comparation
-            sysprop_golden_dict = change_file_to_dict(GOLDEN_PROPERTY)
-            sysprop_sample_dict = change_file_to_dict(SAMPLE_PROPERTY)
+            sysprop_golden_dict = change_file_to_dict(path + GOLDEN_PROPERTY)
+            sysprop_sample_dict = change_file_to_dict(path + SAMPLE_PROPERTY)
             sysprop_diff_dict = run_comparation(sysprop_golden_dict, sysprop_sample_dict)
             #setting comparation
-            collection_golden_dict = parse_collection_txt(GOLDEN_COLLECTION)
-            collection_sample_dict = parse_collection_txt(SAMPLE_COLLECTION)
+            collection_golden_dict = parse_collection_txt(path + GOLDEN_COLLECTION)
+            collection_sample_dict = parse_collection_txt(path + SAMPLE_COLLECTION)
 
             settings_golden_dict = collection_golden_dict['settings']
             settings_sample_dict = collection_sample_dict['settings']
@@ -134,8 +151,9 @@ def main():
             diff_dict['sysprop'] = sysprop_diff_dict
             diff_dict['settings'] = settings_diff_dict
             diff_dict['ringtone'] = ringtone_diff_dict
-            output_diff_to_file(diff_dict, PROPERTY_COMPARE_RESULT)
-
+            output_diff_to_file(diff_dict, OUTPUT_DIR + PROPERTY_COMPARE_RESULT)
+        else:
+            print 'Invalid parameters!'
 
 if __name__ == '__main__':
     main()

@@ -12,11 +12,11 @@ LOG_FILE = 'bin/fai.log'
 
 PULL_INFO_SHELL = 'utils/pull_info.sh'
 
-GOLDEN_PROPERTY = 'bin/property_golden.txt'
-SAMPLE_PROPERTY = 'bin/property_sample.txt'
+GOLDEN_PROPERTY = 'property_golden.txt'
+SAMPLE_PROPERTY = 'property_sample.txt'
 
-GOLDEN_COLLECTION = 'bin/collection_golden.txt'
-SAMPLE_COLLECTION = 'bin/collection_sample.txt'
+GOLDEN_COLLECTION = 'collection_golden.txt'
+SAMPLE_COLLECTION = 'collection_sample.txt'
 
 SETTINGS_KEY_TAG = '<golden.settings.title>'
 SETTINGS_VAL_TAG = '<golden.settings.content>'
@@ -26,4 +26,4 @@ RINGTONE_VAL_TAG = '<golden.ringtone.content>'
 
 PULL_SUCCESS_FLAG = False
 
-PROPERTY_COMPARE_RESULT = 'out/compare_result.txt'
+PROPERTY_COMPARE_RESULT = 'compare_result.txt'
