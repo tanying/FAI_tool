@@ -29,8 +29,3 @@ adb install ../utils/goldencollector.apk
 adb shell am start -n com.tcl.goldencollector/.MainActivity
 is_pull_aready
 cd ..
-
-
-
-
-

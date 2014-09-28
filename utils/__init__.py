@@ -5,5 +5,5 @@ __author__ = 'Tan Ying<ying.tan@tcl.com>'
 
 from utils import *
 from config import *
-from log import *
-from error import *
+#from log import *
+#from error import *

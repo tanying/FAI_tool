@@ -4,12 +4,12 @@ __author__ = 'Tan Ying<ying.tan@tcl.com>'
 
 import os
 import sys
-import log
+#import log
 import json
 import config
 import commands
 
-logger = log.getLogging('utils.py')
+#logger = log.getLogging('utils.py')
 
 def filter_brackets(string):
     return string[1:-1]
@@ -166,3 +166,17 @@ def output_diff_to_file(diff, file):
 
     print 'FAI RESULT: %s' % is_pass
     print 'The detail report have output successfully in [%s]' % file
+
+class FAIError(Exception):
+    def __init__(self, message):
+        self.message = message
+    def __str__(self):
+        return self.message 
+
+class Info(object):
+    def __init__(self, message):
+        self.message = message
+    def __str__(self):
+        return self.message
+    def show(self):
+        print self.message

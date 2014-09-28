@@ -12,7 +12,11 @@ import commands
 from xml.etree import ElementTree
 from utils import *
 
-logger = log.getLogging('fai')
+#logger = log.getLogging('fai')
+if not os.path.exists(config.BIN_DIR):
+    os.mkdir(config.BIN_DIR)
+# elif not os.path.isfile(config.LOG_FILE):
+#     os.mknod(config.LOG_FILE)
 
 def pull_by_apk(cfile):
 
@@ -29,13 +33,13 @@ def pull_info_from_phone(is_golden, path):
     if is_golden:
         property_file = path + GOLDEN_PROPERTY
         collection_file = path + GOLDEN_COLLECTION
-        unconnected_hint = 'Please connect the Golden Phone with PC by USB.'
-        success_hint = 'Pull properties from golden phone successful.\n'
+        unconnected_hint = HINT_UNCONNECTED_USB % 'Golden Phone'
+        success_hint = HINT_PULL_SUCCESS % 'Golden Phone'
     else:
         property_file = path + SAMPLE_PROPERTY
         collection_file = path + SAMPLE_COLLECTION
-        unconnected_hint = 'Please connect the Sample Phone with PC by USB for comparation.'
-        success_hint = 'Pull properties from sample phone successful.\n'
+        unconnected_hint = HINT_UNCONNECTED_USB % 'Sample Phone'
+        success_hint = HINT_PULL_SUCCESS % 'Sample Phone'
 
     command = 'adb shell getprop > %s' % property_file
     status, output = commands.getstatusoutput(command)
@@ -51,12 +55,12 @@ def pull_info_from_phone(is_golden, path):
         print unconnected_hint
         #restart server
 
-        usb_connected = raw_input('enter(aleady), else(exit)')
+        usb_connected = raw_input(HINT_RAW_INPUT)
 
         if usb_connected == '':
             pull_info_from_phone(is_golden, path)
         else:
-            print 'You pressed any key to exit, bye!'
+            print 
             sys.exit(1)
 
 def parse_collection_txt(file):
@@ -96,7 +100,10 @@ def get_filepath(argv_list):
     cmd = argv_list[1]
 
     if len(argv_list) == 2:
-        path = path
+        path = BIN_DIR
+        if cmd == '-c':
+            if (not os.path.isfile(path + GOLDEN_PROPERTY)) or (not os.path.isfile(path + GOLDEN_COLLECTION)):
+                raise FAIError(ERROR_FILE_NOT_EXIST)
     elif len(argv_list) >= 3:
         path = argv_list[2]
 
@@ -105,17 +112,17 @@ def get_filepath(argv_list):
 
         if cmd == '-p':
             if not os.path.exists(path):
-                raise FAIError('Invalid path!')
+                raise FAIError(ERROR_DIR_NOT_EXIST)
         elif cmd == '-c':
             if (not os.path.isfile(path + GOLDEN_PROPERTY)) or (not os.path.isfile(path + GOLDEN_COLLECTION)):
-                raise FAIError('File not in the corresponding path!')
+                raise FAIError(ERROR_FILE_NOT_EXIST)
 
     return path
 
 def main():
     argv_len = len(sys.argv)
     if argv_len < 2:
-        print 'Please add parameters:\n  -p [golden path] pull golden info\n  -c [golden path] compare infomation\n'
+        print HINT_LACK_PARAMETER
     elif argv_len >= 2:
         cmd = sys.argv[1]
         path = get_filepath(sys.argv)
@@ -151,7 +158,7 @@ def main():
             diff_dict['ringtone'] = ringtone_diff_dict
             output_diff_to_file(diff_dict, OUTPUT_DIR + PROPERTY_COMPARE_RESULT)
         else:
-            print 'Invalid parameters!'
+            print HINT_INVALID_PARAMETER
 
 if __name__ == '__main__':
     main()
