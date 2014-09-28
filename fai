@@ -11,139 +11,93 @@ import commands
 from xml.etree import ElementTree
 from utils import *
 
-logger = log.getLogging('PortingChecker')
+logger = log.getLogging('fai')
+
+def pull_by_apk(cfile):
+
+    if is_pull_aready('golden_collection.flag'):
+        os.system('adb pull /sdcard/golden_collection.txt ./%s' % cfile)
+        os.system('adb uninstall com.tcl.goldencollector')
+        os.system('adb shell rm -f /data/local/tmp/goldencollector.apk')
+        os.system('adb shell rm -f /sdcard/golden_collection.flag')
+        os.system('adb shell rm -f /sdcard/golden_collection.txt')
+    else:
+        pull_by_apk(cfile)
 
 def pull_info_from_phone(is_golden):
     global PULL_SUCCESS_FLAG
 
     if is_golden:
         property_file = GOLDEN_PROPERTY
+        collection_file = GOLDEN_COLLECTION
         unconnected_hint = 'Please connect the Golden Phone with PC by USB.'
-        success_hint = 'Pull system property from golden phone successful.\n'
+        success_hint = 'Pull properties from golden phone successful.\n'
     else:
         property_file = SAMPLE_PROPERTY
+        collection_file = SAMPLE_COLLECTION
         unconnected_hint = 'Please connect the Sample Phone with PC by USB for comparation.'
-        success_hint = 'Pull system property from compare phone successful.\n'
+        success_hint = 'Pull properties from sample phone successful.\n'
+
     command = 'adb shell getprop > %s' % property_file
     status, output = commands.getstatusoutput(command)
 
     if status == 0:
-        print success_hint
+        os.system('adb install utils/goldencollector.apk')
+        os.system('adb shell am start -n com.tcl.goldencollector/.MainActivity')
+
+        pull_by_apk(collection_file)
+
         PULL_SUCCESS_FLAG = True
+        print success_hint
     else:
         print unconnected_hint
+        #restart server
+        os.system('sudo adb kill-server')
+        os.system('sudo adb start-server')
+
         usb_connected = raw_input('enter(aleady), else(exit)')
 
         if usb_connected == '':
             pull_info_from_phone(is_golden)
+        else:
+            print 'You pressed any key to exit, bye!'
+            sys.exit(1)
 
-def filter_brackets(string):
-    return string[1:-1]
-
-def change_file_to_dict(filepath):
+def parse_collection_txt(file):
     fdict = {}
-    f = open(filepath, 'r')
-    while True:
-        line = f.readline()
-        if not line:
-            break
-        else:
-            line_list = line.split(':')
-            key = filter_brackets(line_list[0].strip())
-            value = filter_brackets(line_list[1].strip())
-            fdict[key] = value
-    return fdict
 
-def run_comparation(golden_filepath, sample_filepath):
-    golden_dict = change_file_to_dict(golden_filepath)
-    compare_dict = change_file_to_dict(sample_filepath)
+    sdict = {}
+    rdict = {}
 
-    in_golden_set = set(golden_dict.items())-set(compare_dict.items())
-    in_sample_set = set(compare_dict.items())-set(golden_dict.items())
-
-    in_golden_dict = change_binaryTupleSet_to_dict(in_golden_set)
-    in_sample_dict = change_binaryTupleSet_to_dict(in_sample_set)
-
-    return generate_diff_dict(in_golden_dict, in_sample_dict)
-
-def generate_diff_dict(gdt, sdt):
-    diff_dict = {}
-    diff_value = []
-    not_in_golden = []
-    not_in_sample = []
-
-    for gkey in gdt:
-        if not sdt.has_key(gkey):
-            dt = {}
-            #dt['info'] = 'Info exists in Golden but not in Sample.'
-            dt['key'] = gkey
-            dt['value'] = gdt[gkey]
-            not_in_sample.append(dt)
-        else:
-            dt = {}
-            #dt['info'] = 'different value.'
-            dt['key'] = gkey
-            dt['golden_value'] = gdt[gkey]
-            dt['sample_value'] = sdt[gkey]
-            diff_value.append(dt)
-
-    for skey in sdt:
-        if not gdt.has_key(skey):
-            dt = {}
-            #dt['info'] = 'Info exists in Sample but not in Golden.'
-            dt['key'] = skey
-            dt['value'] = sdt[skey]
-            not_in_golden.append(dt)
-
-    diff_dict['diff_value'] = diff_value
-    diff_dict['not_in_golden'] = not_in_golden
-    diff_dict['not_in_sample'] = not_in_sample
-
-    return diff_dict
-
-def change_binaryTupleSet_to_dict(btset):
-    dt = {}
-    for item in btset:
-        key = item[0]
-        value = item[1]
-        dt[key] = value
-
-    return dt
-
-def output_diff_to_file(diff, file):
-    result_string = 'FAI result: '
-    if diff:
-        result_string += 'FAIL\n\n'
-
-        list0 = diff['diff_value']
-        result_string += 'Golden Phone and Sample Phone have different value.\n'
-        for info in list0:
-            result_string += '  key: %s\n' % info['key']
-            result_string += '    golden_value: %s\n' % info['golden_value']
-            result_string += '    sample_value: %s\n' % info['sample_value']
-
-        list1 = diff['not_in_sample']
-        result_string += '\nInfo exists in Golden but not in Sample.\n'
-        for info in list1:
-            result_string += '  [%s]: [%s]\n' % (info['key'], info['value'])
-
-        list2 = diff['not_in_golden']
-        result_string += '\nInfo exists in Sample but not in Golden.\n'
-        for info in list2:
-            result_string += '  [%s]: [%s]\n' % (info['key'], info['value'])
-            # result_string += '  key: %s\n' % info['key']
-            # result_string += '  value: %s\n' % info['value']
-    else:
-        result_string += 'PASS'
-
-    f = open(file, 'wb')
-    result = str(result_string)
-    f.write(result)
+    f = open(file, 'r')
+    flist = f.readlines()
     f.close()
 
-    print 'The compare result have output successfully in [%s]' % file
+    key = ''
+    count = 0
+    for item in flist:
+        mod = count % 2
+        if mod == 0:
+            if item[:len(SETTINGS_KEY_TAG)] == SETTINGS_KEY_TAG:
+                key = filter_xml_tag(SETTINGS_KEY_TAG, item)
+            elif item[:len(RINGTONE_KEY_TAG)] == RINGTONE_KEY_TAG:
+                key = filter_xml_tag(RINGTONE_KEY_TAG, item)
+        else:
+            if item[:len(SETTINGS_VAL_TAG)] == SETTINGS_VAL_TAG:
+                val = filter_xml_tag(SETTINGS_VAL_TAG, item)
+                sdict[key] = val
+            elif item[:len(RINGTONE_VAL_TAG)] == RINGTONE_VAL_TAG:
+                val = filter_xml_tag(RINGTONE_VAL_TAG, item)
+                rdict[key] = val
+
+        count += 1
+
+    fdict['settings'] = sdict
+    fdict['ringtone'] = rdict
+    return fdict
 
 def main():
+
     global PULL_SUCCESS_FLAG
     pull_info_from_phone(True)
 
@@ -151,11 +105,37 @@ def main():
         PULL_SUCCESS_FLAG = False
         print('Please connect the Sample Phone with PC by USB for comparation:')
         usb_connected = raw_input('enter(aleady), else(exit)')
-        pull_info_from_phone(False)
+        if usb_connected == '':
+            pull_info_from_phone(False)
+        else:
+            sys.exit(1)
 
         if PULL_SUCCESS_FLAG:
-            diff_dict = run_comparation(GOLDEN_PROPERTY, SAMPLE_PROPERTY)
+            diff_dict = {}
+            #system property comparation
+            sysprop_golden_dict = change_file_to_dict(GOLDEN_PROPERTY)
+            sysprop_sample_dict = change_file_to_dict(SAMPLE_PROPERTY)
+            sysprop_diff_dict = run_comparation(sysprop_golden_dict, sysprop_sample_dict)
+            #setting comparation
+            collection_golden_dict = parse_collection_txt(GOLDEN_COLLECTION)
+            collection_sample_dict = parse_collection_txt(SAMPLE_COLLECTION)
+
+            settings_golden_dict = collection_golden_dict['settings']
+            settings_sample_dict = collection_sample_dict['settings']
+            settings_diff_dict = run_comparation(settings_golden_dict, settings_sample_dict)
+
+            #ringtone comparation
+            ringtone_golden_dict = collection_golden_dict['ringtone']
+            ringtone_sample_dict = collection_sample_dict['ringtone']
+            ringtone_diff_dict = run_comparation(ringtone_golden_dict, ringtone_sample_dict)
+
+            #contacts comapration(TODO Later)
+
+            diff_dict['sysprop'] = sysprop_diff_dict
+            diff_dict['settings'] = settings_diff_dict
+            diff_dict['ringtone'] = ringtone_diff_dict
             output_diff_to_file(diff_dict, PROPERTY_COMPARE_RESULT)
+
 
 if __name__ == '__main__':
     main()
