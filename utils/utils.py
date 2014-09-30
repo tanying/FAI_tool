@@ -122,7 +122,7 @@ def generate_out_put_string(diff, string, lang='cn'):
     if list1:
         string += '\n  %s\n' % INFO_NOT_IN_GOLDEN
         for info in list1:
-            tring += '    [%s]: [%s]\n' % (info['key'], info['value'])
+            string += '    [%s]: [%s]\n' % (info['key'], info['value'])
 
     if list2:
         string += '\n  %s\n' % INFO_NOT_IN_SAMPLE
