@@ -6,8 +6,8 @@ import os
 import sys
 #import log
 import json
-import config
 import commands
+from config import *
 
 #logger = log.getLogging('utils.py')
 
@@ -112,12 +112,12 @@ def generate_out_put_string(diff, string, lang='cn'):
     list1 = diff['not_in_sample']
     list2 = diff['not_in_golden']
 
-if list0:
-    string += '  %s\n' % INFO_DIFFERENT_VALUE
-    for info in list0:
-        string += '    key: [%s]\n' % info['key']
-        string += '      golden_value: [%s]\n' % info['golden_value']
-        string += '      sample_value: [%s]\n' % info['sample_value']
+    if list0:
+        string += '  %s\n' % INFO_DIFFERENT_VALUE
+        for info in list0:
+            string += '    key: [%s]\n' % info['key']
+            string += '      golden_value: [%s]\n' % info['golden_value']
+            string += '      sample_value: [%s]\n' % info['sample_value']
 
     if list1:
         string += '\n  %s\n' % INFO_NOT_IN_GOLDEN
@@ -132,8 +132,7 @@ if list0:
     return string
 
 def output_diff_to_file(diff, file):
-    result_string = '%s: '% INFO_FAI_RESULT
-
+    result_string = '%s: ' % INFO_FAI_RESULT
     r0 = is_fai_pass(diff['sysprop'])
     r1 = is_fai_pass(diff['settings'])
     r2 = is_fai_pass(diff['ringtone'])
@@ -156,8 +155,8 @@ def output_diff_to_file(diff, file):
             result_string += '\n\n[%s]\n' % INFO_RINGTONE_DIFF
             result_string = generate_out_put_string(diff['ringtone'], result_string)
 
-    if not os.path.exists(config.OUTPUT_DIR):
-        os.mkdir(config.OUTPUT_DIR)
+    if not os.path.exists(OUTPUT_DIR):
+        os.mkdir(OUTPUT_DIR)
 
     f = open(file, 'wb')
     result = str(result_string)

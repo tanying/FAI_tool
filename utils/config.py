@@ -43,9 +43,7 @@ HINT_RESULT_OUTPUT_SUCCESS = '比较的详细结果已经输出至%s'#'The detai
 INFO_DIFFERENT_VALUE = 'Golden手机和Sample手机的value不一致.' #Golden Phone and Sample Phone have different value.
 INFO_NOT_IN_GOLDEN = 'Sample手机缺失的信息.' #Info exists in Golden but not in Sample.
 INFO_NOT_IN_SAMPLE = 'Sample手机多余的信息.' #Info exists in Sample but not in Golden.
-
 INFO_SYSPROP_DIFF = 'system property异常信息' #'system property difference'
 INFO_SETTINGS_DIFF = 'settings 异常信息' #'settings difference'
 INFO_RINGTONE_DIFF = 'ringtone 异常信息' #'ringtone difference'
-
-INFO_FAI_RESULT = 'FAI结果' # 'FAI result'
+INFO_FAI_RESULT = 'FAI结果' #'FAI result'
