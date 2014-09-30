@@ -163,19 +163,11 @@ def output_diff_to_file(diff, file):
     f.write(result)
     f.close()
 
-    print '%s: %s' % (INFO_FAI_RESULT, is_pass)
-    print HINT_RESULT_OUTPUT_SUCCESS % file
+    show('%s: %s' % (INFO_FAI_RESULT, is_pass))
+    show(HINT_RESULT_OUTPUT_SUCCESS % file)
 
-class FAIError(Exception):
-    def __init__(self, message):
-        self.message = message
-    def __str__(self):
-        return self.message 
-
-class Info(object):
-    def __init__(self, message):
-        self.message = message
-    def __str__(self):
-        return self.message
-    def show(self):
-        print self.message
+def show(msg):
+    type= sys.getfilesystemencoding()
+    #change string to system encoding for messy code
+    result = msg.decode('utf-8').encode(type)
+    print result

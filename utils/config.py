@@ -3,6 +3,7 @@
 __author__ = 'Tan Ying<ying.tan@tcl.com>' 
 
 #import logging
+IS_DEBUG = False
 
 OUTPUT_DIR = 'out/'
 BIN_DIR = 'bin/'

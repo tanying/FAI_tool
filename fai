@@ -50,9 +50,9 @@ def pull_info_from_phone(is_golden, path):
 
         pull_by_apk(collection_file)
 
-        print success_hint
+        show(success_hint)
     else:
-        print unconnected_hint
+        show(unconnected_hint)
         #restart server
 
         usb_connected = raw_input(HINT_RAW_INPUT)
@@ -60,7 +60,6 @@ def pull_info_from_phone(is_golden, path):
         if usb_connected == '':
             pull_info_from_phone(is_golden, path)
         else:
-            print 
             sys.exit(1)
 
 def parse_collection_txt(file):
@@ -103,7 +102,8 @@ def get_filepath(argv_list):
         path = BIN_DIR
         if cmd == '-c':
             if (not os.path.isfile(path + GOLDEN_PROPERTY)) or (not os.path.isfile(path + GOLDEN_COLLECTION)):
-                raise FAIError(ERROR_FILE_NOT_EXIST)
+                show(ERROR_FILE_NOT_EXIST)
+                sys.exit(1)
     elif len(argv_list) >= 3:
         path = argv_list[2]
 
@@ -112,17 +112,18 @@ def get_filepath(argv_list):
 
         if cmd == '-p':
             if not os.path.exists(path):
-                raise FAIError(ERROR_DIR_NOT_EXIST)
+                show(ERROR_DIR_NOT_EXIST)
+                sys.exit(1)
         elif cmd == '-c':
             if (not os.path.isfile(path + GOLDEN_PROPERTY)) or (not os.path.isfile(path + GOLDEN_COLLECTION)):
-                raise FAIError(ERROR_FILE_NOT_EXIST)
-
+                show(ERROR_FILE_NOT_EXIST)
+                sys.exit(1)
     return path
 
 def main():
     argv_len = len(sys.argv)
     if argv_len < 2:
-        print HINT_LACK_PARAMETER
+        show(HINT_LACK_PARAMETER)
     elif argv_len >= 2:
         cmd = sys.argv[1]
         path = get_filepath(sys.argv)
@@ -158,7 +159,7 @@ def main():
             diff_dict['ringtone'] = ringtone_diff_dict
             output_diff_to_file(diff_dict, OUTPUT_DIR + PROPERTY_COMPARE_RESULT)
         else:
-            print HINT_INVALID_PARAMETER
+            show(HINT_INVALID_PARAMETER)
 
 if __name__ == '__main__':
     main()
