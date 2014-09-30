@@ -33,13 +33,13 @@ def pull_info_from_phone(is_golden, path):
     if is_golden:
         property_file = path + GOLDEN_PROPERTY
         collection_file = path + GOLDEN_COLLECTION
-        unconnected_hint = HINT_UNCONNECTED_USB % 'Golden Phone'
-        success_hint = HINT_PULL_SUCCESS % 'Golden Phone'
+        unconnected_hint = HINT_UNCONNECTED_USB % 'Golden'
+        success_hint = HINT_PULL_SUCCESS % 'Golden'
     else:
         property_file = path + SAMPLE_PROPERTY
         collection_file = path + SAMPLE_COLLECTION
-        unconnected_hint = HINT_UNCONNECTED_USB % 'Sample Phone'
-        success_hint = HINT_PULL_SUCCESS % 'Sample Phone'
+        unconnected_hint = HINT_UNCONNECTED_USB % 'Sample'
+        success_hint = HINT_PULL_SUCCESS % 'Sample'
 
     command = 'adb shell getprop > %s' % property_file
     status, output = commands.getstatusoutput(command)

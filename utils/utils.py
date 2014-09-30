@@ -107,32 +107,32 @@ def is_fai_pass(diff):
     else:
         return True
 
-def generate_out_put_string(diff, string):
+def generate_out_put_string(diff, string, lang='cn'):
     list0 = diff['diff_value']
     list1 = diff['not_in_sample']
     list2 = diff['not_in_golden']
 
-    if list0:
-        string += '  Golden Phone and Sample Phone have different value.\n'
-        for info in list0:
-            string += '    key: [%s]\n' % info['key']
-            string += '      golden_value: [%s]\n' % info['golden_value']
-            string += '      sample_value: [%s]\n' % info['sample_value']
+if list0:
+    string += '  %s\n' % INFO_DIFFERENT_VALUE
+    for info in list0:
+        string += '    key: [%s]\n' % info['key']
+        string += '      golden_value: [%s]\n' % info['golden_value']
+        string += '      sample_value: [%s]\n' % info['sample_value']
 
     if list1:
-        string += '\n  Info exists in Golden but not in Sample.\n'
+        string += '\n  %s\n' % INFO_NOT_IN_GOLDEN
         for info in list1:
-            string += '    [%s]: [%s]\n' % (info['key'], info['value'])
+            tring += '    [%s]: [%s]\n' % (info['key'], info['value'])
 
     if list2:
-        string += '\n  Info exists in Sample but not in Golden.\n'
+        string += '\n  %s\n' % INFO_NOT_IN_SAMPLE
         for info in list2:
             string += '    [%s]: [%s]\n' % (info['key'], info['value'])
 
     return string
 
 def output_diff_to_file(diff, file):
-    result_string = 'FAI result: '
+    result_string = '%s: '% INFO_FAI_RESULT
 
     r0 = is_fai_pass(diff['sysprop'])
     r1 = is_fai_pass(diff['settings'])
@@ -147,13 +147,13 @@ def output_diff_to_file(diff, file):
         result_string += 'FAIL'
 
         if not r0:
-            result_string += '\n\n[system property difference]\n'
+            result_string += '\n\n[%s]\n' % INFO_SYSPROP_DIFF
             result_string = generate_out_put_string(diff['sysprop'], result_string)
         if not r1:
-            result_string += '\n\n[settings difference]\n'
+            result_string += '\n\n[%s]\n' % INFO_SETTINGS_DIFF
             result_string = generate_out_put_string(diff['settings'], result_string)
         if not r2:
-            result_string += '\n\n[ringtone difference]\n'
+            result_string += '\n\n[%s]\n' % INFO_RINGTONE_DIFF
             result_string = generate_out_put_string(diff['ringtone'], result_string)
 
     if not os.path.exists(config.OUTPUT_DIR):
@@ -164,8 +164,8 @@ def output_diff_to_file(diff, file):
     f.write(result)
     f.close()
 
-    print 'FAI RESULT: %s' % is_pass
-    print 'The detail report have output successfully in [%s]' % file
+    print '%s: %s' % (INFO_FAI_RESULT, is_pass)
+    print HINT_RESULT_OUTPUT_SUCCESS % file
 
 class FAIError(Exception):
     def __init__(self, message):
