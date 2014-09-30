@@ -54,13 +54,15 @@ def pull_info_from_phone(is_golden, path):
     else:
         show(unconnected_hint)
         #restart server
-
-        usb_connected = raw_input(HINT_RAW_INPUT)
-
-        if usb_connected == '':
-            pull_info_from_phone(is_golden, path)
+        try:
+            usb_connected = write(HINT_RAW_INPUT)
+        except (EOFError,KeyboardInterrupt):
+            show(HINT_RAW_INPUT_EXIT)
         else:
-            sys.exit(1)
+            if usb_connected == '':
+                pull_info_from_phone(is_golden, path)
+            else:
+                sys.exit(1)
 
 def parse_collection_txt(file):
     fdict = {}

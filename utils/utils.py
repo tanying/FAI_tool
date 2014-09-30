@@ -171,3 +171,9 @@ def show(msg):
     #change string to system encoding for messy code
     result = msg.decode('utf-8').encode(type)
     print result
+
+def write(msg):
+    type= sys.getfilesystemencoding()
+    #change string to system encoding for messy code
+    result = msg.decode('utf-8').encode(type)
+    raw_input(result)
