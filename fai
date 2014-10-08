@@ -21,11 +21,11 @@ if not os.path.exists(config.BIN_DIR):
 def pull_by_apk(cfile):
 
     if is_pull_aready('golden_collection.flag'):
-        os.system('adb pull /sdcard/golden_collection.txt %s' % cfile)
-        os.system('adb uninstall com.tcl.goldencollector')
-        os.system('adb shell rm -f /data/local/tmp/goldencollector.apk')
-        os.system('adb shell rm -f /sdcard/golden_collection.flag')
-        os.system('adb shell rm -f /sdcard/golden_collection.txt')
+        os.system('%s pull /sdcard/golden_collection.txt %s' % (ADB_PATH, cfile))
+        os.system('%s uninstall com.tcl.goldencollector' % ADB_PATH)
+        os.system('%s shell rm -f /data/local/tmp/goldencollector.apk' % ADB_PATH)
+        os.system('%s shell rm -f /sdcard/golden_collection.flag' % ADB_PATH)
+        os.system('%s shell rm -f /sdcard/golden_collection.txt' % ADB_PATH)
     else:
         pull_by_apk(cfile)
 
@@ -41,12 +41,12 @@ def pull_info_from_phone(is_golden, path):
         unconnected_hint = HINT_UNCONNECTED_USB % 'Sample'
         success_hint = HINT_PULL_SUCCESS % 'Sample'
 
-    command = 'adb shell getprop > %s' % property_file
+    command = '%s shell getprop > %s' % (ADB_PATH, property_file)
     status, output = commands.getstatusoutput(command)
 
     if status == 0:
-        os.system('adb install utils/goldencollector.apk')
-        os.system('adb shell am start -n com.tcl.goldencollector/.MainActivity')
+        os.system('%s install utils/goldencollector.apk' % ADB_PATH)
+        os.system('%s shell am start -n com.tcl.goldencollector/.MainActivity' % ADB_PATH)
 
         pull_by_apk(collection_file)
 

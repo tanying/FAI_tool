@@ -1,9 +1,16 @@
 # -*- coding: utf8 -*-
+import platform
 
 __author__ = 'Tan Ying<ying.tan@tcl.com>' 
 
 OUTPUT_DIR = 'out/'
 BIN_DIR = 'bin/'
+OS_TYPE = platform.system()
+
+if OS_TYPE == 'Windows':
+    ADB_PATH = 'tools\adb'
+else:
+    ADB_PATH = 'tools/adb'
 # LOG_LEVEL = logging.DEBUG
 # LOG_LEVEL_FILE = logging.DEBUG
 # LOG_FILE = 'bin/fai.log'
