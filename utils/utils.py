@@ -175,5 +175,9 @@ def show(msg):
 def write(msg):
     type= sys.getfilesystemencoding()
     #change string to system encoding for messy code
-    result = msg.decode('utf-8').encode(type)
-    raw_input(result)
+    msg = msg.decode('utf-8').encode(type)
+    result = raw_input(msg)
+    if result == '':
+        return True
+    else:
+        return False

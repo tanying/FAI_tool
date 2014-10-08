@@ -8,7 +8,7 @@ BIN_DIR = 'bin/'
 OS_TYPE = platform.system()
 
 if OS_TYPE == 'Windows':
-    ADB_PATH = 'tools\adb'
+    ADB_PATH = 'tools\\adb'
 else:
     ADB_PATH = 'tools/adb'
 # LOG_LEVEL = logging.DEBUG

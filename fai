@@ -55,11 +55,11 @@ def pull_info_from_phone(is_golden, path):
         show(unconnected_hint)
         #restart server
         try:
-            usb_connected = write(HINT_RAW_INPUT)
+            is_exit = write(HINT_RAW_INPUT)
         except (EOFError,KeyboardInterrupt):
             show(HINT_RAW_INPUT_EXIT)
         else:
-            if usb_connected == '':
+            if is_exit:
                 pull_info_from_phone(is_golden, path)
             else:
                 sys.exit(1)
