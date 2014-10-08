@@ -22,7 +22,7 @@ def filter_xml_tag(ltag, string):
     return string
 
 def is_pull_aready(path):
-    cmd = '%s shell ls /sdcard/ | grep %s' % (ADB_PATH, path)
+    cmd = '%s shell ls /sdcard/ | %s %s' % (ADB_PATH, GREP, path)
     s = os.system(cmd)
     if s == 0:
         return True

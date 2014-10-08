@@ -42,9 +42,9 @@ def pull_info_from_phone(is_golden, path):
         success_hint = HINT_PULL_SUCCESS % 'Sample'
 
     command = '%s shell getprop > %s' % (ADB_PATH, property_file)
-    status, output = commands.getstatusoutput(command)
 
-    if status == 0:
+    if OS_TYPE == 'Windows':
+        os.system(command)
         os.system('%s install utils/goldencollector.apk' % ADB_PATH)
         os.system('%s shell am start -n com.tcl.goldencollector/.MainActivity' % ADB_PATH)
 
@@ -52,17 +52,27 @@ def pull_info_from_phone(is_golden, path):
 
         show(success_hint)
     else:
-        show(unconnected_hint)
-        #restart server
-        try:
-            is_exit = write(HINT_RAW_INPUT)
-        except (EOFError,KeyboardInterrupt):
-            show(HINT_RAW_INPUT_EXIT)
+        status, output = commands.getstatusoutput(command)
+
+        if status == 0:
+            os.system('%s install utils/goldencollector.apk' % ADB_PATH)
+            os.system('%s shell am start -n com.tcl.goldencollector/.MainActivity' % ADB_PATH)
+
+            pull_by_apk(collection_file)
+
+            show(success_hint)
         else:
-            if is_exit:
-                pull_info_from_phone(is_golden, path)
+            show(unconnected_hint)
+            #restart server
+            try:
+                is_exit = write(HINT_RAW_INPUT)
+            except (EOFError,KeyboardInterrupt):
+                show(HINT_RAW_INPUT_EXIT)
             else:
-                sys.exit(1)
+                if is_exit:
+                    pull_info_from_phone(is_golden, path)
+                else:
+                    sys.exit(1)
 
 def parse_collection_txt(file):
     fdict = {}

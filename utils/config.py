@@ -9,8 +9,10 @@ OS_TYPE = platform.system()
 
 if OS_TYPE == 'Windows':
     ADB_PATH = 'tools\\adb'
+    GREP = 'findstr'
 else:
     ADB_PATH = 'tools/adb'
+    GREP = 'grep'
 # LOG_LEVEL = logging.DEBUG
 # LOG_LEVEL_FILE = logging.DEBUG
 # LOG_FILE = 'bin/fai.log'
