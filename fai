@@ -45,7 +45,7 @@ def pull_info_from_phone(is_golden, path):
 
     if OS_TYPE == 'Windows':
         os.system(command)
-        os.system('%s -r install %s' % (ADB_PATH, APK_PATH))
+        os.system('%s install %s' % (ADB_PATH, APK_PATH))
         os.system('%s shell am start -n com.tcl.goldencompare/.MainActivity' % ADB_PATH)
 
         pull_by_apk(collection_file)
@@ -53,6 +53,7 @@ def pull_info_from_phone(is_golden, path):
         show(success_hint)
     else:
         status, output = commands.getstatusoutput(command)
+        print status
 
         if status == 0:
             os.system('%s install %s' % (ADB_PATH, APK_PATH))
@@ -70,6 +71,8 @@ def pull_info_from_phone(is_golden, path):
                 show(HINT_RAW_INPUT_EXIT)
             else:
                 if is_exit:
+                    os.system('adb kill-server')
+                    os.system('adb start-server')
                     pull_info_from_phone(is_golden, path)
                 else:
                     sys.exit(1)
