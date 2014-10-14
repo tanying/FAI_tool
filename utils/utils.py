@@ -39,8 +39,11 @@ def change_file_to_dict(filepath):
         else:
             line_list = line.split(':')
             key = filter_brackets(line_list[0].strip())
-            value = filter_brackets(line_list[1].strip())
-            fdict[key] = value
+            if len(line_list) ==2:
+                value = filter_brackets(line_list[1].strip())
+                fdict[key] = value
+            else:
+                fdict[key] = ''
 
     return fdict
 
