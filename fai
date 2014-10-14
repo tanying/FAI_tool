@@ -45,7 +45,7 @@ def pull_info_from_phone(is_golden, path):
 
     if OS_TYPE == 'Windows':
         os.system(command)
-        os.system('%s -r install utils/goldencompare.apk' % ADB_PATH)
+        os.system('%s -r install %s' % (ADB_PATH, APK_PATH))
         os.system('%s shell am start -n com.tcl.goldencompare/.MainActivity' % ADB_PATH)
 
         pull_by_apk(collection_file)
@@ -55,7 +55,7 @@ def pull_info_from_phone(is_golden, path):
         status, output = commands.getstatusoutput(command)
 
         if status == 0:
-            os.system('%s install utils/goldencompare.apk' % ADB_PATH)
+            os.system('%s install %s' % (ADB_PATH, APK_PATH))
             os.system('%s shell am start -n com.tcl.goldencompare/.MainActivity' % ADB_PATH)
 
             pull_by_apk(collection_file)

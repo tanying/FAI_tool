@@ -9,9 +9,11 @@ OS_TYPE = platform.system()
 
 if OS_TYPE == 'Windows':
     ADB_PATH = 'tools\\adb'
+    APK_PATH = 'utils\\goldencompare.apk'
     GREP = 'findstr'
 else:
     ADB_PATH = 'tools/adb'
+    APK_PATH = 'utils/goldencompare.apk'
     GREP = 'grep'
 # LOG_LEVEL = logging.DEBUG
 # LOG_LEVEL_FILE = logging.DEBUG
