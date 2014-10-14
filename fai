@@ -22,8 +22,8 @@ def pull_by_apk(cfile):
 
     if is_pull_aready('golden_collection.flag'):
         os.system('%s pull /sdcard/golden_collection.txt %s' % (ADB_PATH, cfile))
-        os.system('%s uninstall com.tcl.goldencollector' % ADB_PATH)
-        os.system('%s shell rm -f /data/local/tmp/goldencollector.apk' % ADB_PATH)
+        os.system('%s uninstall com.tcl.goldencompare' % ADB_PATH)
+        os.system('%s shell rm -f /data/local/tmp/goldencompare.apk' % ADB_PATH)
         os.system('%s shell rm -f /sdcard/golden_collection.flag' % ADB_PATH)
         os.system('%s shell rm -f /sdcard/golden_collection.txt' % ADB_PATH)
     else:
@@ -45,8 +45,8 @@ def pull_info_from_phone(is_golden, path):
 
     if OS_TYPE == 'Windows':
         os.system(command)
-        os.system('%s install utils/goldencollector.apk' % ADB_PATH)
-        os.system('%s shell am start -n com.tcl.goldencollector/.MainActivity' % ADB_PATH)
+        os.system('%s -r install utils/goldencompare.apk' % ADB_PATH)
+        os.system('%s shell am start -n com.tcl.goldencompare/.MainActivity' % ADB_PATH)
 
         pull_by_apk(collection_file)
 
@@ -55,8 +55,8 @@ def pull_info_from_phone(is_golden, path):
         status, output = commands.getstatusoutput(command)
 
         if status == 0:
-            os.system('%s install utils/goldencollector.apk' % ADB_PATH)
-            os.system('%s shell am start -n com.tcl.goldencollector/.MainActivity' % ADB_PATH)
+            os.system('%s install utils/goldencompare.apk' % ADB_PATH)
+            os.system('%s shell am start -n com.tcl.goldencompare/.MainActivity' % ADB_PATH)
 
             pull_by_apk(collection_file)
 
