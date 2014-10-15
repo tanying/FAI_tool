@@ -33,7 +33,12 @@
         "gsm.sim.ril.testsim",
         "bt.fmoverbt",
         "bt.sconocarescattnet",
-        "sys.settings_global_version"
+        "sys.settings_global_version",
+        "vold_swap_state",
+        "external_sd_path",
+        "internal_sd_path",
+        "init.svc.fuse_sdcard0",
+        "persist.sys.sd.defaultpath"
     ],
     "settings":[
         "guideViewStatus",

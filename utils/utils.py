@@ -12,14 +12,14 @@ from config import *
 #logger = log.getLogging('utils.py')
 
 def filter_brackets(string):
-    return string[1:-1]
+    return string[1:-1].lower()
 
 def filter_xml_tag(ltag, string):
     string = string.replace(ltag, '')
     rtag = '</' + ltag[1:]
     string = string.replace(rtag, '')
     string = string.replace('\n', '')
-    return string
+    return string.lower()
 
 def is_pull_aready(path):
     cmd = '%s shell ls /sdcard/ | %s %s' % (ADB_PATH, GREP, path)
