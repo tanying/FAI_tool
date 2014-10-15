@@ -159,7 +159,7 @@ def main():
             pull_info_from_phone(False, path)
 
             fIn = open(WHITELIST_PATH, 'rb')
-            text = fIn.read()
+            text = fIn.read().lower()
             fIn.close()
             white_dict = json.loads(text)
 

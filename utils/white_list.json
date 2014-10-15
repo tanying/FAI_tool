@@ -59,7 +59,9 @@
         "mtk_audioprofile_general_volume_ring",
         "mtk_audioprofile_outdoor_notification_sound",
         "mtk_audioprofile_outdoor_ringtone",
-        "gsm.enbr.rat"
+        "gsm.enbr.rat",
+        "user_rotation",
+        "accelerometer_rotation_restore"
     ],
     "ringtone":[
     ]
