@@ -1,6 +1,5 @@
 {
     "sysprop":[
-
         "ro.boot.serialno",
         "sys.settings_system_version",
         "ro.runtime.firstboot",

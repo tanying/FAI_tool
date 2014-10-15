@@ -9,6 +9,7 @@ import sys
 import shutil
 import getopt
 import commands
+import json
 from xml.etree import ElementTree
 from utils import *
 
@@ -53,7 +54,6 @@ def pull_info_from_phone(is_golden, path):
         show(success_hint)
     else:
         status, output = commands.getstatusoutput(command)
-        print status
 
         if status == 0:
             os.system('%s install %s' % (ADB_PATH, APK_PATH))
@@ -158,7 +158,10 @@ def main():
         elif cmd == '-c':
             pull_info_from_phone(False, path)
 
-            white_dict = json.loads(WHITELIST_PATH)
+            fIn = open(WHITELIST_PATH, 'rb')
+            text = fIn.read()
+            fIn.close()
+            white_dict = json.loads(text)
 
             diff_dict = {}
             #system property comparation
