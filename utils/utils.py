@@ -29,7 +29,15 @@ def is_pull_aready(path):
     else:
         return False
 
-def change_file_to_dict(filepath):
+def is_key_in_whitelist(key, whitelist):
+    for item in whitelist:
+        if key == item:
+            return True
+    return False
+
+def change_file_to_dict(filepath, white_dict):
+    whitelist = white_dict['sysprop']
+
     fdict = {}
     f = open(filepath, 'r')
     while True:
@@ -39,11 +47,15 @@ def change_file_to_dict(filepath):
         else:
             line_list = line.split(':')
             key = filter_brackets(line_list[0].strip())
-            if len(line_list) ==2:
-                value = filter_brackets(line_list[1].strip())
-                fdict[key] = value
+
+            if is_key_in_whitelist(key, whitelist):
+                pass
             else:
-                fdict[key] = ''
+                if len(line_list) ==2:
+                    value = filter_brackets(line_list[1].strip())
+                    fdict[key] = value
+                else:
+                    fdict[key] = ''
 
     return fdict
 

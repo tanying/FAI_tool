@@ -10,11 +10,14 @@ OS_TYPE = platform.system()
 if OS_TYPE == 'Windows':
     ADB_PATH = 'tools\\adb'
     APK_PATH = 'utils\\goldencompare.apk'
+    WHITELIST_PATH = 'utils\\white_list.json'
     GREP = 'findstr'
 else:
     ADB_PATH = 'tools/adb'
     APK_PATH = 'utils/goldencompare.apk'
+    WHITELIST_PATH = 'utils/white_list.json'
     GREP = 'grep'
+
 # LOG_LEVEL = logging.DEBUG
 # LOG_LEVEL_FILE = logging.DEBUG
 # LOG_FILE = 'bin/fai.log'

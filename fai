@@ -77,11 +77,14 @@ def pull_info_from_phone(is_golden, path):
                 else:
                     sys.exit(1)
 
-def parse_collection_txt(file):
+def parse_collection_txt(file, white_dict):
     fdict = {}
 
     sdict = {}
     rdict = {}
+
+    settings_whitelist = white_dict['settings']
+    ringtone_whitelist = white_dict['ringtone']
 
     f = open(file, 'r')
     flist = f.readlines()
@@ -98,11 +101,17 @@ def parse_collection_txt(file):
                 key = filter_xml_tag(RINGTONE_KEY_TAG, item)
         else:
             if item[:len(SETTINGS_VAL_TAG)] == SETTINGS_VAL_TAG:
-                val = filter_xml_tag(SETTINGS_VAL_TAG, item)
-                sdict[key] = val
+                if is_key_in_whitelist(key, settings_whitelist):
+                    pass
+                else:
+                    val = filter_xml_tag(SETTINGS_VAL_TAG, item)
+                    sdict[key] = val
             elif item[:len(RINGTONE_VAL_TAG)] == RINGTONE_VAL_TAG:
-                val = filter_xml_tag(RINGTONE_VAL_TAG, item)
-                rdict[key] = val
+                if is_key_in_whitelist(key, ringtone_whitelist):
+                    pass
+                else:
+                    val = filter_xml_tag(RINGTONE_VAL_TAG, item)
+                    rdict[key] = val
 
         count += 1
 
@@ -149,14 +158,16 @@ def main():
         elif cmd == '-c':
             pull_info_from_phone(False, path)
 
+            white_dict = json.loads(WHITELIST_PATH)
+
             diff_dict = {}
             #system property comparation
-            sysprop_golden_dict = change_file_to_dict(path + GOLDEN_PROPERTY)
-            sysprop_sample_dict = change_file_to_dict(path + SAMPLE_PROPERTY)
+            sysprop_golden_dict = change_file_to_dict(path + GOLDEN_PROPERTY, white_dict)
+            sysprop_sample_dict = change_file_to_dict(path + SAMPLE_PROPERTY, white_dict)
             sysprop_diff_dict = run_comparation(sysprop_golden_dict, sysprop_sample_dict)
             #setting comparation
-            collection_golden_dict = parse_collection_txt(path + GOLDEN_COLLECTION)
-            collection_sample_dict = parse_collection_txt(path + SAMPLE_COLLECTION)
+            collection_golden_dict = parse_collection_txt(path + GOLDEN_COLLECTION, white_dict)
+            collection_sample_dict = parse_collection_txt(path + SAMPLE_COLLECTION, white_dict)
 
             settings_golden_dict = collection_golden_dict['settings']
             settings_sample_dict = collection_sample_dict['settings']

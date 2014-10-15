@@ -1,0 +1,21 @@
+{
+    "sysprop":[
+
+        "ro.boot.serialno",
+        "sys.settings_system_version",
+        "ro.runtime.firstboot",
+        "ro.serialno",
+        "net.hostname",
+        "init.svc.sn",
+        "sys.belowtempunplug",
+        "sys.belowtemp",
+        "sys.overtempun",
+        "sys.powerweak",
+        "bwc.mm._Profile"
+    ],
+    "settings":[
+        "guideViewStatus"
+    ],
+    "ringtone":[
+    ]
+}
