@@ -6,9 +6,12 @@ import os
 import sys
 #import log
 import json
-import commands
 from config import *
 
+if OS_TYPE == 'Windows':
+    pass
+else:
+    import commands
 #logger = log.getLogging('utils.py')
 
 def filter_brackets(string):
