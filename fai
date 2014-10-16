@@ -24,11 +24,15 @@ def pull_by_apk(cfile):
         os.system('%s shell rm -f /data/local/tmp/goldencompare.apk' % ADB_PATH)
         os.system('%s shell rm -f /sdcard/golden_collection.flag' % ADB_PATH)
 
-        os.system('%s pull /sdcard/golden_collection.txt %s' % (ADB_PATH, cfile))
-        os.system('%s uninstall com.tcl.goldencompare' % ADB_PATH)
-        os.system('%s shell rm -f /data/local/tmp/goldencompare.apk' % ADB_PATH)
-        os.system('%s shell rm -f /sdcard/golden_collection.flag' % ADB_PATH)
-        os.system('%s shell rm -f /sdcard/golden_collection.txt' % ADB_PATH)
+        status = os.system('%s pull /sdcard/golden_collection.txt %s' % (ADB_PATH, cfile))
+        if status == 0:
+            os.system('%s uninstall com.tcl.goldencompare' % ADB_PATH)
+            os.system('%s shell rm -f /data/local/tmp/goldencompare.apk' % ADB_PATH)
+            os.system('%s shell rm -f /sdcard/golden_collection.flag' % ADB_PATH)
+            os.system('%s shell rm -f /sdcard/golden_collection.txt' % ADB_PATH)
+            return
+        else:
+            sys.exit(1)
     else:
         pull_by_apk(cfile)
 

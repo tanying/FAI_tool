@@ -2,6 +2,7 @@
     "sysprop":[
         "ro.boot.serialno",
         "sys.settings_system_version",
+        "sys.settings_global_version",
         "ro.runtime.firstboot",
         "ro.serialno",
         "net.hostname",
@@ -99,7 +100,9 @@
         "need_import_sim",
         "SIM_READ_DONE",
         "plmn_name_sim1",
-        "key_data_observer_flag"
+        "key_data_observer_flag",
+        "wifi_hotspot_default_password",
+        "android_id"
     ],
     "ringtone":[
     ]
