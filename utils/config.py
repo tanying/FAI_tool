@@ -1,5 +1,6 @@
 # -*- coding: utf8 -*-
 import platform
+import logging
 
 __author__ = 'Tan Ying<ying.tan@tcl.com>' 
 
@@ -18,9 +19,10 @@ else:
     WHITELIST_PATH = 'utils/white_list.json'
     GREP = 'grep'
 
-# LOG_LEVEL = logging.DEBUG
-# LOG_LEVEL_FILE = logging.DEBUG
-# LOG_FILE = 'bin/fai.log'
+LOG_LEVEL = logging.DEBUG
+#LOG_LEVEL = logging.CRITICAL #发布时
+LOG_LEVEL_FILE = logging.DEBUG
+LOG_FILE = 'bin/fai.log'
 
 GOLDEN_PROPERTY = 'property_golden.txt'
 SAMPLE_PROPERTY = 'property_sample.txt'
